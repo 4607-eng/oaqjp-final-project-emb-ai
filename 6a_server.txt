@@ -1,0 +1,64 @@
+"""Flask server for emotion detection application."""
+
+from flask import Flask, request, render_template
+from EmotionDetection import emotion_detector
+
+app = Flask(__name__)
+
+
+@app.route("/emotionDetector")
+def emotions_detector():
+    """Run emotion detection on the input text and return formatted output."""
+    text_to_analyze = request.args.get("textToAnalyze")
+
+    if not text_to_analyze:
+        return "No text provided."
+
+    response = emotion_detector(text_to_analyze)
+
+    anger = response["anger"]
+    disgust = response["disgust"]
+    fear = response["fear"]
+    joy = response["joy"]
+    sadness = response["sadness"]
+    dominant_emotion = response["dominant_emotion"]
+
+    return (
+        f"The given statement, the system response is "
+        f"'anger': {anger}, 'disgust': {disgust}, 'fear': {fear}, "
+        f"'joy': {joy} and 'sadness': {sadness}. "
+        f"'The dominant emotion is {dominant_emotion}."
+)
+        
+
+
+@app.route("/")
+def render_index_page():
+    """Render the main index page."""
+    return render_template("index.html")
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+
+
+#Terminal 1
+theia@theiadocker-dlfish12:/home/project/final_project$ cd /home/project/final_project/
+oaqjp-final-project-emb-ai
+python3 server.py
+ * Serving Flask app 'server'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.17.10.174:5000
+Press CTRL+C to quit
+127.0.0.1 - - [18/Mar/2026 13:45:21] "GET /emotionDetector?textToAnalyze=I%20love%20life HTTP/1.1" 200 -
+
+#Terminal 2
+theia@theiadocker-dlfish12:/home/project$ curl "
+http://127.0.0.1:5000/emotionDetector?textToAnalyze=I%20love%20life"
+The given statement, the system response is 'anger': 0.006274985, 
+'disgust': 0.0025598293, 'fear': 0.009251528, 
+'joy': 0.9680386 and 'sadness': 0.049744144. 
+'The dominant emotion is joy.

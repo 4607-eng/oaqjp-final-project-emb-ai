@@ -22,8 +22,8 @@ def emotion_detector(text_to_analyze):
             "disgust": None,
             "fear": None,
             "joy": None,
-            "sadness": None,
-            "dominant_emotion": None,
+            "sadness": None
+            "dominant_emotion": None
 
         }
          
